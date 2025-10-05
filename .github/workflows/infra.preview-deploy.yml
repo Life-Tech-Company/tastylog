@@ -19,7 +19,7 @@ env:
 defaults:
   run:
     shell: bash
-    working-directory: "10_infr/"
+    working-directory: "10_infra/"
 
 jobs:
   preview:
