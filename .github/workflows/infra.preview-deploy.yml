@@ -64,34 +64,59 @@ jobs:
             -input=false \
             -no-color \
             -detailed-exitcode        
-      - name: Slack Notify
-        uses: slackapi/slack-github-action@v1.22.0
+      # - name: Slack Notify
+      #   uses: slackapi/slack-github-action@v1.22.0
+      #   with:
+      #     channel-id: "C09JELX3WHM"
+      #     payload: |
+      #       {
+      #         "attachments": [
+      #           {
+      #             "color": "#0068B7",
+      #             "blocks": [
+      #               {
+      #                 "type": "header",
+      #                 "text": {
+      #                   "type": "plain_text",
+      #                   "text": "Message Header",
+      #                   "emoji": true
+      #                 }
+      #               },
+      #               {
+      #                 "type": "section",
+      #                 "text": {
+      #                   "type": "mrkdwn",
+      #                   "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #                 }
+      #               }
+      #             ]
+      #           }
+      #         ]
+      #       }
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}   
+
+  deploy:
+    name: "Deploy"
+    needs: preview
+    if: needs.preview.outputs.TF_PLAN_EXITCODE == '2'
+    environment: prodyction
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          channel-id: "C09JELX3WHM"
-          payload: |
-            {
-              "attachments": [
-                {
-                  "color": "#0068B7",
-                  "blocks": [
-                    {
-                      "type": "header",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "Message Header",
-                        "emoji": true
-                      }
-                    },
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}           
+          terraform_version: ${{ env.TF_VERSION }}
+      - name: Terraform format
+        run: |
+          terraform fmt -check
+      - name: Congigure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION}}
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+      - name: Terraform Init
+        run: |
+          terraform init -no-color    
