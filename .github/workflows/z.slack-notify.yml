@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Slack Notify
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v1.22.0
         with:
           method: chat.postMessage
           channel-id: "C09HZ02RD8V"
