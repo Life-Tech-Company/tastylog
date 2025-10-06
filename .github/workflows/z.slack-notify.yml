@@ -11,8 +11,10 @@ jobs:
       - name: Slack Notify
         uses: slackapi/slack-github-action@v2.1.1
         with:
-          channel-id: "C09HZ02RD8V"
-          slack-message: |
-            :tada: This is a test message from GitHub Actions workflow
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}   # こちらは input
+          payload: |
+            {
+              "channel": "C09HZ02RD8V",
+              "text": "This is a test message from GitHub Actions workflow :tada:"
+            }
