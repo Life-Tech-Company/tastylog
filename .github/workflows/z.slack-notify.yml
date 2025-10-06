@@ -13,9 +13,10 @@ jobs:
         with:
           method: chat.postMessage
           channel-id: "C09HZ02RD8V"
-          token: ${{ secrets.SLACK_BOT_TOKEN }}   # こちらは input
           payload: |
             {
               "channel": "C09HZ02RD8V",
               "text": "This is a test message from GitHub Actions workflow :tada:"
             }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}    
