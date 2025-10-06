@@ -11,7 +11,7 @@ jobs:
       - name: Slack Notify
         uses: slackapi/slack-github-action@v2.1.1
         with:
-          channel-id: C09HZ02RD8V
+          channel-id: "C09HZ02RD8V"
           payload: |
             {
               "text": "This is a test message from GitHub Actions workflow :tada:"
