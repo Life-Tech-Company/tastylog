@@ -88,7 +88,6 @@ jobs:
                         "type": "mrkdwn",
                         "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                       }
-                      }
                     }
                   ]
                 }
