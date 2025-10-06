@@ -1,0 +1,20 @@
+name: "z Slack Notify"
+
+on:
+  workflow_dispatch:
+
+jobs:
+   notify:
+    name: "Notify Slack"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Notify
+      - uses: slackapi/slack-github-action@v2.1.1
+      - with:
+          channel-id: C09HZ02RD8V
+          payload: |
+            {
+              "text": "This is a test message from GitHub Actions workflow :tada:"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
