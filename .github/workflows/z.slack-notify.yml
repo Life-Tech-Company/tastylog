@@ -11,12 +11,31 @@ jobs:
       - name: Slack Notify
         uses: slackapi/slack-github-action@v1.22.0
         with:
-          method: chat.postMessage
           channel-id: "C09HZ02RD8V"
           payload: |
             {
-              "channel": "C09HZ02RD8V",
-              "text": "This is a test message from GitHub Actions workflow :tada:"
+              "attachments": [
+                {
+                  "color": "#0068B7",
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Message Header",
+                        "emoji": true
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Hello World :ghost:"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}    
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }} 
