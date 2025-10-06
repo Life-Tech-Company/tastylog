@@ -29,6 +29,8 @@ jobs:
   preview:
     name: "Preview Deploy"
     runs-on: ubuntu-latest
+    outputs:
+      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -51,6 +53,8 @@ jobs:
         run: |
           terraform validate -no-color
       - name: Terraform Plan
+        continue-on-error: true
+        id: plan
         run : |
           terraform plan \
             -var 'project=${{ env.TF_PROJECT }}' \
@@ -59,4 +63,36 @@ jobs:
             -var 'password=${{ secrets.MYSQL_PASSWORD }}' \
             -input=false \
             -no-color \
-            -detailed-exitcode                                
+            -detailed-exitcode        
+      - name: Slack Notify
+        uses: slackapi/slack-github-action@v1.22.0
+        with:
+          channel-id: "C09JELX3WHM"
+          payload: |
+            {
+              "attachments": [
+                {
+                  "color": "#0068B7",
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Message Header",
+                        "emoji": true
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}           
