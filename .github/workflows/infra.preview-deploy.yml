@@ -30,7 +30,7 @@ jobs:
     name: "Preview Deploy"
     runs-on: ubuntu-latest
     outputs:
-      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode 
+      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
